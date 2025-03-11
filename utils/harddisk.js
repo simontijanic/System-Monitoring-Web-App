@@ -1,5 +1,19 @@
 const { execSync } = require('child_process');
 
+function parseDfOutput(output){
+    const regex = /(\d+)\s+(\d+)\s+(\d+)\s+(\d+)%\s+\//;
+    const match = output.match(regex);
+    if (match) {
+      return {
+        totalBlocks: parseInt(match[1]),
+        usedBlocks: parseInt(match[2]),
+        availableBlocks: parseInt(match[3]),
+        usePercent: parseInt(match[4])
+      };
+    }
+    return null;
+  }
+
 exports.getHardDiskInfo =()=> {
   const output = execSync('df /').toString();
   const lines = output.split('\n');
