@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Monitoring Web App</title>
+</head>
+<body> 
+    <h1>Memory</h1>
+    <p>Total: <%=memoryInfo.total %> MB</p>
+    <p>Used: <%= memoryInfo.used %> MB</p>
+    <p>Free: <%= memoryInfo.free %> MB</p>
+    
+    <h1>Hard Disk</h1>
+    <p>Total: <%= hardDiskInfo.total.toFixed(1) %> GB</p>
+    <p>Used: <%= hardDiskInfo.used.toFixed(1) %> GB</p>
+    <p>Available: <%= hardDiskInfo.available.toFixed(1) %> GB</p>
+    
+    <h1>Processor</h1>
+    <p>Model Name: <%=processorInfo.modelName %></p>
+    <p>Number of CPUs: <%= processorInfo.numberOfCpus %></p>
+    <p>Cores per Socket: <%= processorInfo.coresPerSocket %></p>
+
+</body>
+</html>
