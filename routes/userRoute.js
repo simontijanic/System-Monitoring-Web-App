@@ -1,15 +1,23 @@
 const router = require("express").Router();
 
-const memory = require("../utils/memory");
-const harddisk = require("../utils/harddisk");
-const processor = require("../utils/processor");
+const systemMetrics = require('../utils/metrics');
 
-router.get("/", (req, res) => {
-  const memoryInfo = memory.getMemoryInfo();
-  const hardDiskInfo = harddisk.getHardDiskInfo();
-  const processorInfo = processor.getProcessorInfo();
+router.get("/", async (req, res) => {
+    try {
+        const [cpu, memory, disk] = await Promise.all([
+            systemMetrics.getCPUUsage(),
+            systemMetrics.getMemoryUsage(),
+            systemMetrics.getDiskUsage()
+        ]);
 
-  res.render("index", {memoryInfo, hardDiskInfo, processorInfo});
+        res.render("index",{
+            cpu,
+            memory,
+            disk
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch system metrics' });
+    }
 });
 
 module.exports = router;
