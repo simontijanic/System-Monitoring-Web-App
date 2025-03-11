@@ -9,6 +9,17 @@ class SystemMetrics {
         };
     }
 
+    async getOperationSysteminfo(){
+        const osData = await si.osInfo();
+        return {
+            platform: osData.platform,
+            distro: osData.distro,
+            release: osData.release,
+            codename: osData.codename,
+            kernel: osData.kernel
+        };
+    }
+
     async getMemoryUsage() {
         const memData = await si.mem();
         return {
