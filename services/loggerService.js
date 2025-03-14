@@ -5,7 +5,7 @@ class SystemLogger {
         this.logsPerPage = 15; // Logs per page
         this.thresholds = {
             cpu: 80,    // 80% CPU usage
-            memory: 90, // 90% Memory usage
+            memory: 60, // 90% Memory usage
             disk: 90,   // 90% Disk usage
             temp: 80    // 80°C temperature threshold
         };
