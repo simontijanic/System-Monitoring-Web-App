@@ -1,0 +1,11 @@
+.bg-purple {
+    background-color: #6f42c1;
+}
+pre {
+    font-size: 0.875rem;
+    white-space: pre-wrap;
+    margin: 0;
+}
+.collapse {
+    transition: all 0.2s ease;
+}
