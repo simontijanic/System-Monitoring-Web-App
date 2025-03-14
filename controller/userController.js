@@ -1,14 +1,8 @@
-const systemMetrics = require('../utils/metrics');
-
-// leser fra proc/cpuinfo proc/meminfo proc/mounts og /etc/fstab
+const systemMetrics = require('../utils/systemMetrics');
+const logger = require('../utils/systemLogger');
 
 exports.getIndex = async (req, res) => {
     try {
-        //const cpu = await systemMetrics.getCPUUsage();
-        //const memory = await systemMetrics.getMemoryUsage();
-        //const disk = await systemMetrics.getDiskUsage();
-        //const systeminfo = await systemMetrics.getOperationSysteminfo();
-        
         const [cpu, memory, disk, systeminfo] = await Promise.all([
             systemMetrics.getCPUUsage(),
             systemMetrics.getMemoryUsage(),
@@ -16,13 +10,25 @@ exports.getIndex = async (req, res) => {
             systemMetrics.getOperationSysteminfo() 
         ]);
 
-        res.render("index",{
+        // Check metrics and generate logs if needed
+        logger.checkMetrics({ cpu, memory, disk });
+
+        // Get filtered logs
+        const filter = req.query.filter || 'all';
+        const severity = req.query.severity || 'all';
+        const logs = logger.getLogs(filter, severity);
+
+        res.render("index", {
             cpu,
             memory,
             disk,
-            systeminfo
+            systeminfo,
+            logs,
+            currentFilter: filter,
+            currentSeverity: severity
         });
     } catch (error) {
+        logger.addLog('system', error.message, 'error');
         res.status(500).json({ error: 'Failed to fetch system metrics' });
     }
 }

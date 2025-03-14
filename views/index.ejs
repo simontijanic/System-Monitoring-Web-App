@@ -77,6 +77,98 @@
                 </div>
             </div>
         </div>
+
+        <!-- Add this after your existing cards in index.ejs -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">System Logs</h5>
+                        <div class="d-flex gap-2">
+                            <select class="form-select form-select-sm" id="logFilter" onchange="updateLogs()">
+                                <option value="all" <%= currentFilter === 'all' ? 'selected' : '' %>>All Types</option>
+                                <option value="cpu" <%= currentFilter === 'cpu' ? 'selected' : '' %>>CPU</option>
+                                <option value="memory" <%= currentFilter === 'memory' ? 'selected' : '' %>>Memory</option>
+                                <option value="disk" <%= currentFilter === 'disk' ? 'selected' : '' %>>Disk</option>
+                                <option value="system" <%= currentFilter === 'system' ? 'selected' : '' %>>System</option>
+                            </select>
+                            <select class="form-select form-select-sm" id="severityFilter" onchange="updateLogs()">
+                                <option value="all" <%= currentSeverity === 'all' ? 'selected' : '' %>>All Severities</option>
+                                <option value="info" <%= currentSeverity === 'info' ? 'selected' : '' %>>Info</option>
+                                <option value="warning" <%= currentSeverity === 'warning' ? 'selected' : '' %>>Warning</option>
+                                <option value="error" <%= currentSeverity === 'error' ? 'selected' : '' %>>Error</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Type</th>
+                                        <th>Severity</th>
+                                        <th>Message</th>
+                                        <th>Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% logs.forEach(function(log) { %>
+                                        <tr class="<%= log.severity === 'error' ? 'table-danger' : 
+                                                    log.severity === 'warning' ? 'table-warning' : 
+                                                    log.severity === 'info' ? 'table-info' : '' %>">
+                                            <td><%= log.timestamp.toLocaleTimeString() %></td>
+                                            <td>
+                                                <span class="badge <%= 
+                                                    log.type === 'system' ? 'bg-purple' :
+                                                    log.type === 'cpu' ? 'bg-primary' :
+                                                    log.type === 'memory' ? 'bg-success' :
+                                                    log.type === 'disk' ? 'bg-info' :
+                                                    'bg-secondary' %>">
+                                                    <%= log.type %>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge <%= 
+                                                    log.severity === 'error' ? 'bg-danger' : 
+                                                    log.severity === 'warning' ? 'bg-warning' : 
+                                                    'bg-info' %>">
+                                                    <%= log.severity %>
+                                                </span>
+                                            </td>
+                                            <td><%= log.message %></td>
+                                            <td>
+                                                <% if (log.details && Object.keys(log.details).length > 0) { %>
+                                                    <button class="btn btn-sm btn-outline-secondary" 
+                                                            type="button" 
+                                                            data-bs-toggle="collapse" 
+                                                            data-bs-target="#details-<%= log.id %>">
+                                                        Show Details
+                                                    </button>
+                                                    <div class="collapse" id="details-<%= log.id %>">
+                                                        <div class="card card-body mt-2">
+                                                            <pre class="mb-0"><%= JSON.stringify(log.details, null, 2) %></pre>
+                                                        </div>
+                                                    </div>
+                                                <% } %>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        function updateLogs() {
+            const typeFilter = document.getElementById('logFilter').value;
+            const severityFilter = document.getElementById('severityFilter').value;
+            window.location.href = `/?filter=${typeFilter}&severity=${severityFilter}`;
+        }
+        </script>
     </div>
 
 </body>
