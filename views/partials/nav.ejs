@@ -1,5 +1,12 @@
 <nav class="navbar navbar-dark bg-dark mb-4">
     <div class="container">
-        <span class="navbar-brand">System Monitor For <strong><%= systeminfo.platform %></strong> <%= systeminfo.distro %> <%= systeminfo.release %></span>
+        <span class="navbar-brand">
+            System Monitor
+            <% if (typeof systeminfo !== 'undefined' && systeminfo) { %>
+                For <strong><%= systeminfo.platform || 'Unknown' %></strong> 
+                <%= systeminfo.distro || '' %> 
+                <%= systeminfo.release || '' %>
+            <% } %>
+        </span>
     </div>
 </nav>
