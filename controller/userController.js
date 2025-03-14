@@ -4,6 +4,11 @@ const systemMetrics = require('../utils/metrics');
 
 exports.getIndex = async (req, res) => {
     try {
+        //const cpu = await systemMetrics.getCPUUsage();
+        //const memory = await systemMetrics.getMemoryUsage();
+        //const disk = await systemMetrics.getDiskUsage();
+        //const systeminfo = await systemMetrics.getOperationSysteminfo();
+        
         const [cpu, memory, disk, systeminfo] = await Promise.all([
             systemMetrics.getCPUUsage(),
             systemMetrics.getMemoryUsage(),
