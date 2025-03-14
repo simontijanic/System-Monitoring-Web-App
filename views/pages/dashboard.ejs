@@ -1,27 +1,19 @@
 <div class="row">
-    <% if (typeof cpu !== 'undefined') { %>
-        <%- include('../partials/cards/cpu') %>
-    <% } %>
-    <% if (typeof memory !== 'undefined') { %>
-        <%- include('../partials/cards/memory') %>
-    <% } %>
-    <% if (typeof disk !== 'undefined') { %>
-        <%- include('../partials/cards/disk') %>
-    <% } %>
+    <%- include('../partials/cards/cpu') %>
+    <%- include('../partials/cards/memory') %>
+    <%- include('../partials/cards/disk') %>
 </div>
 
-<% if (typeof logs !== 'undefined' && logs) { %>
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="card">
-                <%- include('../partials/logs/filter') %>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <%- include('../partials/logs/table') %>
-                        <%- include('../partials/logs/pagination') %>
-                    </div>
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <%- include('../partials/logs/filter') %>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <%- include('../partials/logs/table') %>
+                    <%- include('../partials/logs/pagination') %>
                 </div>
             </div>
         </div>
     </div>
-<% } %>
+</div>
