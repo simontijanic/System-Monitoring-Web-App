@@ -1,14 +1,25 @@
 const express = require("express");
+const config = require('./config/config');
+const systemRoutes = require("./routes/systemRoutes");
+
 const app = express();
 
-const userRoute = require("./routes/userRoute")
-
+// View engine setup
 app.set("view engine", "ejs");
-app.use(express.static("public"));
 app.set("views", "./views");
 
-app.use(userRoute)
+// Static files
+app.use(express.static("public"));
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+// Routes
+app.use("/", systemRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).render('error', { error: 'Something broke!' });
+});
+
+app.listen(config.app.port, () => {
+    console.log(`Server is running on port ${config.app.port}`);
 });
