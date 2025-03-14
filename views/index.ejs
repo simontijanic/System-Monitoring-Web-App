@@ -170,6 +170,45 @@
                                     <% }); %>
                                 </tbody>
                             </table>
+                            
+                            <!-- Add pagination controls -->
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <p class="text-muted mb-0">
+                                    Showing <%= (pagination.currentPage - 1) * pagination.logsPerPage + 1 %> 
+                                    to <%= Math.min(pagination.currentPage * pagination.logsPerPage, pagination.totalLogs) %> 
+                                    of <%= pagination.totalLogs %> logs
+                                </p>
+                                
+                                <nav aria-label="Log navigation">
+                                    <ul class="pagination mb-0">
+                                        <!-- Previous button -->
+                                        <li class="page-item <%= pagination.currentPage === 1 ? 'disabled' : '' %>">
+                                            <a class="page-link" href="javascript:void(0)" 
+                                               onclick="updateLogs(<%= pagination.currentPage - 1 %>)">
+                                                Previous
+                                            </a>
+                                        </li>
+                                        
+                                        <!-- Page numbers -->
+                                        <% for(let i = 1; i <= pagination.totalPages; i++) { %>
+                                            <li class="page-item <%= pagination.currentPage === i ? 'active' : '' %>">
+                                                <a class="page-link" href="javascript:void(0)" 
+                                                   onclick="updateLogs(<%= i %>)">
+                                                    <%= i %>
+                                                </a>
+                                            </li>
+                                        <% } %>
+                                        
+                                        <!-- Next button -->
+                                        <li class="page-item <%= pagination.currentPage === pagination.totalPages ? 'disabled' : '' %>">
+                                            <a class="page-link" href="javascript:void(0)" 
+                                               onclick="updateLogs(<%= pagination.currentPage + 1 %>)">
+                                                Next
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -177,10 +216,10 @@
         </div>
 
         <script>
-        function updateLogs() {
+        function updateLogs(page = 1) {
             const typeFilter = document.getElementById('logFilter').value;
             const severityFilter = document.getElementById('severityFilter').value;
-            window.location.href = `/?filter=${typeFilter}&severity=${severityFilter}`;
+            window.location.href = `/?filter=${typeFilter}&severity=${severityFilter}&page=${page}`;
         }
         </script>
     </div>

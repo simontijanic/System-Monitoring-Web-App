@@ -1,6 +1,8 @@
 class SystemLogger {
     constructor() {
         this.logs = [];
+        this.maxLogs = 1000; // Maximum logs to keep
+        this.logsPerPage = 15; // Logs per page
         this.thresholds = {
             cpu: 80,    // 80% CPU usage
             memory: 90, // 90% Memory usage
@@ -19,7 +21,11 @@ class SystemLogger {
             id: Date.now()
         };
         this.logs.unshift(log);
-        if (this.logs.length > 100) this.logs.pop();
+        
+        // Clean up old logs if exceeding maximum
+        if (this.logs.length > this.maxLogs) {
+            this.logs = this.logs.slice(0, this.maxLogs);
+        }
         return log;
     }
 
@@ -125,12 +131,27 @@ class SystemLogger {
         return `${size.toFixed(2)} ${units[unitIndex]}`;
     }
 
-    getLogs(filter = 'all', severity = 'all') {
-        return this.logs.filter(log => {
+    getLogs(filter = 'all', severity = 'all', page = 1) {
+        const filteredLogs = this.logs.filter(log => {
             const typeMatch = filter === 'all' ? true : log.type === filter;
             const severityMatch = severity === 'all' ? true : log.severity === severity;
             return typeMatch && severityMatch;
         });
+
+        // Calculate pagination
+        const startIndex = (page - 1) * this.logsPerPage;
+        const endIndex = startIndex + this.logsPerPage;
+        const totalPages = Math.ceil(filteredLogs.length / this.logsPerPage);
+
+        return {
+            logs: filteredLogs.slice(startIndex, endIndex),
+            pagination: {
+                currentPage: page,
+                totalPages,
+                totalLogs: filteredLogs.length,
+                logsPerPage: this.logsPerPage
+            }
+        };
     }
 }
 

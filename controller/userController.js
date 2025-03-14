@@ -23,11 +23,14 @@ exports.getIndex = async (req, res) => {
 
         const filter = req.query.filter || 'all';
         const severity = req.query.severity || 'all';
-        const logs = logger.getLogs(filter, severity);
+        const page = parseInt(req.query.page) || 1;
+        
+        const { logs, pagination } = logger.getLogs(filter, severity, page);
 
         res.render("index", {
             ...metrics,
             logs,
+            pagination,
             currentFilter: filter,
             currentSeverity: severity
         });
