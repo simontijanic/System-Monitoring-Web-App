@@ -1,3 +1,8 @@
+# System Monitoring Web App
+
+## Architecture Flow Diagram
+
+```mermaid
 graph TD
     A[Client Browser] -->|HTTP Request| B[Express Server/index.js]
     B -->|Routes Request| C[userRoute.js]
@@ -21,3 +26,4 @@ graph TD
     subgraph Frontend
         G
     end
+```
