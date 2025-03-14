@@ -1,3 +1,36 @@
-<div class="d-flex justify-content-between align-items-center mt-3">
-    <p class="text-muted mb-0">Loading...</p>
-</div>
+<% if (pagination.totalPages > 1) { %>
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <p class="text-muted mb-0">
+            Showing <%= (pagination.currentPage - 1) * pagination.logsPerPage + 1 %> 
+            to <%= Math.min(pagination.currentPage * pagination.logsPerPage, pagination.totalLogs) %> 
+            of <%= pagination.totalLogs %> logs
+        </p>
+        
+        <nav aria-label="Log navigation">
+            <ul class="pagination mb-0">
+                <li class="page-item <%= pagination.currentPage === 1 ? 'disabled' : '' %>">
+                    <a class="page-link" href="javascript:void(0)" 
+                       onclick="updateLogs(<%= pagination.currentPage - 1 %>)">
+                        Previous
+                    </a>
+                </li>
+                
+                <% for(let i = 1; i <= pagination.totalPages; i++) { %>
+                    <li class="page-item <%= pagination.currentPage === i ? 'active' : '' %>">
+                        <a class="page-link" href="javascript:void(0)" 
+                           onclick="updateLogs(<%= i %>)">
+                            <%= i %>
+                        </a>
+                    </li>
+                <% } %>
+                
+                <li class="page-item <%= pagination.currentPage === pagination.totalPages ? 'disabled' : '' %>">
+                    <a class="page-link" href="javascript:void(0)" 
+                       onclick="updateLogs(<%= pagination.currentPage + 1 %>)">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+<% } %>
