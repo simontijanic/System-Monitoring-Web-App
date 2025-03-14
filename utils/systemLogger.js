@@ -24,54 +24,66 @@ class SystemLogger {
     }
 
     async checkMetrics(metrics) {
-        const { cpu, memory, disk, systeminfo } = metrics;
+        try {
+            const { cpu, memory, disk, systeminfo } = metrics;
 
-        // System Information Logging
-        this.addLog('system', `OS: ${systeminfo.platform} ${systeminfo.distro} ${systeminfo.release}`, 'info', {
-            kernel: systeminfo.kernel,
-            codename: systeminfo.codename
-        });
-
-        // CPU Monitoring
-        if (cpu.currentLoad > this.thresholds.cpu) {
-            this.addLog('cpu', `High CPU usage: ${cpu.currentLoad.toFixed(1)}%`, 'warning', {
-                cores: cpu.cpuCount,
-                load: cpu.currentLoad
-            });
-        }
-
-        // Memory Monitoring
-        const memoryUsagePercent = (memory.used / memory.total * 100);
-        if (memoryUsagePercent > this.thresholds.memory) {
-            this.addLog('memory', `High Memory usage: ${memoryUsagePercent.toFixed(1)}%`, 'warning', {
-                total: this.formatBytes(memory.total),
-                used: this.formatBytes(memory.used),
-                free: this.formatBytes(memory.free)
-            });
-        }
-
-        // Disk Monitoring
-        disk.forEach(drive => {
-            if (drive.usedPercentage > this.thresholds.disk) {
-                this.addLog('disk', `High Disk usage on ${drive.filesystem}: ${drive.usedPercentage.toFixed(1)}%`, 'warning', {
-                    filesystem: drive.filesystem,
-                    total: this.formatBytes(drive.size),
-                    used: this.formatBytes(drive.used),
-                    available: this.formatBytes(drive.available)
+            // Check if systeminfo exists before logging
+            if (systeminfo) {
+                this.addLog('system', `OS: ${systeminfo.platform || 'Unknown'} ${systeminfo.distro || ''} ${systeminfo.release || ''}`, 'info', {
+                    kernel: systeminfo.kernel || 'Unknown',
+                    codename: systeminfo.codename || 'Unknown'
                 });
             }
-        });
 
-        // Linux-specific logging (if applicable)
-        if (systeminfo.platform.toLowerCase() === 'linux') {
-            try {
-                // Add specific Linux system logs
-                this.monitorLinuxSystem(systeminfo);
-            } catch (error) {
-                this.addLog('system', `Linux monitoring error: ${error.message}`, 'error', {
-                    stack: error.stack
+            // CPU Monitoring (with null check)
+            if (cpu && cpu.currentLoad > this.thresholds.cpu) {
+                this.addLog('cpu', `High CPU usage: ${cpu.currentLoad.toFixed(1)}%`, 'warning', {
+                    cores: cpu?.cpuCount || 'Unknown',
+                    load: cpu.currentLoad
                 });
             }
+
+            // Memory Monitoring (with null check)
+            if (memory && memory.total) {
+                const memoryUsagePercent = (memory.used / memory.total * 100);
+                if (memoryUsagePercent > this.thresholds.memory) {
+                    this.addLog('memory', `High Memory usage: ${memoryUsagePercent.toFixed(1)}%`, 'warning', {
+                        total: this.formatBytes(memory.total),
+                        used: this.formatBytes(memory.used),
+                        free: this.formatBytes(memory.free)
+                    });
+                }
+            }
+
+            // Disk Monitoring (with null check)
+            if (Array.isArray(disk)) {
+                disk.forEach(drive => {
+                    if (drive && drive.usedPercentage > this.thresholds.disk) {
+                        this.addLog('disk', `High Disk usage on ${drive.filesystem}: ${drive.usedPercentage.toFixed(1)}%`, 'warning', {
+                            filesystem: drive.filesystem,
+                            total: this.formatBytes(drive.size),
+                            used: this.formatBytes(drive.used),
+                            available: this.formatBytes(drive.available)
+                        });
+                    }
+                });
+            }
+
+            // Linux-specific logging
+            if (systeminfo?.platform?.toLowerCase() === 'linux') {
+                try {
+                    await this.monitorLinuxSystem(systeminfo);
+                } catch (error) {
+                    this.addLog('system', `Linux monitoring error: ${error.message}`, 'error', {
+                        stack: error.stack
+                    });
+                }
+            }
+        } catch (error) {
+            this.addLog('system', `Metrics monitoring error: ${error.message}`, 'error', {
+                stack: error.stack,
+                timestamp: new Date().toISOString()
+            });
         }
     }
 
