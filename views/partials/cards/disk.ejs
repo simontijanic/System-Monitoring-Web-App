@@ -1,0 +1,24 @@
+<div class="col-md-4 mb-4">
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            <h5 class="card-title mb-0">Disk Usage</h5>
+        </div>
+        <div class="card-body">
+            <% disk.forEach(function(drive) { %>
+                <div class="mb-3">
+                    <p class="mb-1"><strong><%= drive.filesystem %></strong></p>
+                    <div class="progress mb-2">
+                        <div class="progress-bar bg-info" role="progressbar" 
+                             style="width: <%= drive.usedPercentage %>%">
+                            <%= drive.usedPercentage.toFixed(1) %>%
+                        </div>
+                    </div>
+                    <small class="text-muted">
+                        Used: <%= (drive.used / 1024 / 1024 / 1024).toFixed(2) %> GB of 
+                        <%= (drive.size / 1024 / 1024 / 1024).toFixed(2) %> GB
+                    </small>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</div>

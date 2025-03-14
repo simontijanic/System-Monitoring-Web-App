@@ -1,0 +1,13 @@
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function updateLogs(page = 1) {
+    const typeFilter = document.getElementById('logFilter').value;
+    const severityFilter = document.getElementById('severityFilter').value;
+    window.location.href = `/?filter=${typeFilter}&severity=${severityFilter}&page=${page}`;
+}
+
+// Auto-refresh the page every 5 seconds
+setTimeout(() => {
+    window.location.reload();
+}, 5000);
+</script>

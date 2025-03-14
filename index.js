@@ -1,12 +1,16 @@
 const express = require("express");
+const expressLayouts = require('express-ejs-layouts');
 const config = require('./config/config');
 const systemRoutes = require("./routes/systemRoutes");
+const logger = require('./services/loggerService');
 
 const app = express();
 
 // View engine setup
 app.set("view engine", "ejs");
 app.set("views", "./views");
+app.set('layout', 'layouts/main');
+app.use(expressLayouts);
 
 // Static files
 app.use(express.static("public"));

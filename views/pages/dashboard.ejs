@@ -1,0 +1,19 @@
+<div class="row">
+    <%- include('../partials/cards/cpu') %>
+    <%- include('../partials/cards/memory') %>
+    <%- include('../partials/cards/disk') %>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <%- include('../partials/logs/filter') %>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <%- include('../partials/logs/table') %>
+                    <%- include('../partials/logs/pagination') %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
