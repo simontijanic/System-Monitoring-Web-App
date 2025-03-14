@@ -12,7 +12,7 @@ class SystemController {
             
             const { logs, pagination } = SystemModel.getLogs(filter, severity, page);
 
-            res.render("dashboard", {
+            res.render("pages/dashboard", { // Update path to include pages/
                 ...metrics,
                 logs,
                 pagination,
@@ -21,7 +21,7 @@ class SystemController {
             });
         } catch (error) {
             logger.addLog('system', error.message, 'error');
-            res.status(500).render("error", { error: 'Failed to fetch system metrics' });
+            res.status(500).render("pages/error", { error: 'Failed to fetch system metrics' }); // Update path
         }
     }
 }
